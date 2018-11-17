@@ -7,7 +7,9 @@
 			<v-spacer></v-spacer>
 		</v-toolbar>
 		<v-content>
-			<Home/>
+			<v-container>
+				<router-view></router-view>
+			</v-container>
 		</v-content>
 	</v-app>
 </template>

@@ -1,15 +1,14 @@
-<template>
-  <div class="home">
-    <ImageImport/>
-  </div>
+<template lang="pug">
+	.home
+		ImageImport
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from "vue-property-decorator"
-  import ImageImport from "@/components/ImageImport.vue"
+	import { Component, Vue } from "vue-property-decorator"
+	import ImageImport from "@/components/ImageImport.vue"
 
-  @Component({components: {ImageImport}})
-  export default class Home extends Vue {
+	@Component({components: {ImageImport}})
+	export default class Home extends Vue {
 
-  }
+	}
 </script>

@@ -1,10 +1,7 @@
-<template>
-	<div class="imageImport">
-		<label>
-			Select files
-			<input type="file">
-		</label>
-	</div>
+<template lang="pug">
+	v-card.imageImport
+		label Select the images
+			input(type="file" multiple)
 </template>
 
 <script lang="ts">
@@ -15,6 +12,10 @@
 	}
 </script>
 
-<style scoped type="stylus">
-
+<style scoped lang="stylus">
+	.imageImport
+		label
+			cursor pointer
+			input[type=file]
+				display none
 </style>
