@@ -36,24 +36,24 @@
 		}
 
 		private createImageBitmaps(files: File[]): Promise<ImageBitmap[]> {
-			return Promise.all(files.map(f => createImageBitmap(f, 0, 0, 1920, 1080)))
+			return Promise.all(files.map(f => createImageBitmap(f)))
 		}
 
 		private convertToVideo(images: ImageBitmap[]): Promise<Blob> {
 			const canvas = document.createElement("Canvas") as HTMLCanvasElement
-			const width = 1920
-			const height = 1080
+			const width = 1280
+			const height = 720
 
 			canvas.setAttribute("width", width.toString(10))
 			canvas.setAttribute("height", height.toString(10))
-			/*canvas.style.position = "absolute"
+			canvas.style.position = "absolute"
 			canvas.style.top = "0"
-			canvas.style.opacity = "0"*/
+			canvas.style.opacity = "0"
 			document.body.appendChild(canvas)
 			const context = canvas.getContext("2d")!
 
-			const stream = (canvas as any).captureStream(60)
-			const recorder = new MediaRecorder(stream)
+			const stream = (canvas as any).captureStream(0)
+			const recorder = new MediaRecorder(stream, {mimeType: "video/webm", videoBitsPerSecond: 50000000})
 			const chunks: BlobPart[] = []
 			let imageIndex = 0
 
@@ -62,12 +62,12 @@
 			}
 
 			const animate = () => {
-				context.fillStyle = "black"
-				context.fillRect(0, 0, width, height)
-				context.drawImage(images[imageIndex++], 0, 0)
+				context.clearRect(0, 0, width, height)
+				context.drawImage(images[imageIndex++], 0, 0, width, height)
+				stream.requestFrame()
 
 				if (imageIndex < images.length)
-					requestAnimationFrame(animate)
+					setTimeout(animate, 100)
 				else
 					recorder.stop()
 			}
