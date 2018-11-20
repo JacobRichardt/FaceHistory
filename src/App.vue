@@ -1,17 +1,12 @@
-<template>
-	<v-app>
-		<v-toolbar app>
-			<v-toolbar-title class="headline text-uppercase">
-				<span>Face History</span>
-			</v-toolbar-title>
-			<v-spacer></v-spacer>
-		</v-toolbar>
-		<v-content>
-			<v-container>
-				<router-view></router-view>
-			</v-container>
-		</v-content>
-	</v-app>
+<template lang="pug">
+	v-app
+		v-toolbar(app)
+			v-toolbar-title(class="headline text-uppercase")
+				span Face History
+			v-spacer
+		v-content
+			v-container
+				router-view
 </template>
 
 <script lang="ts">
