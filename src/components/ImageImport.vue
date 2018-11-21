@@ -1,7 +1,7 @@
 <template lang="pug">
 	v-card.imageImport
 		v-container
-			label Select the images
+			label.v-btn Select the images
 				input(type="file" multiple accept="image/*" @change="imagesSelected")
 			v-divider
 			div Converted files: {{convertedNumberOfFiles}} of {{selectedNumberOfFiles}}

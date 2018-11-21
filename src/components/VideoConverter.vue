@@ -15,6 +15,10 @@
 		public images!: ImageBitmap[] | null
 		private isWorking = false
 
+		private width = 1280
+		private height = 720
+		private frameRate = 7
+
 		public get canConvert(): boolean {
 			return this.images !== null && !this.isWorking
 		}
@@ -34,11 +38,9 @@
 
 		private convertToVideo(images: ImageBitmap[]): Promise<Blob> {
 			const canvas = document.createElement("Canvas") as HTMLCanvasElement
-			const width = 1280
-			const height = 720
 
-			canvas.setAttribute("width", width.toString(10))
-			canvas.setAttribute("height", height.toString(10))
+			canvas.setAttribute("width", this.width.toString(10))
+			canvas.setAttribute("height", this.height.toString(10))
 			canvas.style.position = "absolute"
 			canvas.style.top = "0"
 			canvas.style.opacity = "0"
@@ -55,12 +57,12 @@
 			}
 
 			const animate = () => {
-				context.clearRect(0, 0, width, height)
-				context.drawImage(images[imageIndex++], 0, 0, width, height)
+				context.clearRect(0, 0, this.width, this.height)
+				context.drawImage(images[imageIndex++], 0, 0, this.width, this.height)
 				stream.requestFrame()
 
 				if (imageIndex < images.length)
-					setTimeout(animate, 100)
+					setTimeout(animate, 1000 / this.frameRate)
 				else
 					recorder.stop()
 			}
