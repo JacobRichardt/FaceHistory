@@ -1,7 +1,7 @@
 <template lang="pug">
 	v-card.videoPlayer
 		v-container
-			v-btn(v-if="videoUrl" :href="videoUrl" download="faceHistoryVideo.webm" block) Download video
+			v-btn(v-if="videoUrl" :href="videoUrl" :download="'faceHistoryVideo.' + videoExtension" block) Download {{videoExtension}} video
 			video(v-if="videoUrl" :src="videoUrl" controls)
 </template>
 
@@ -12,6 +12,12 @@
 	export default class VideoPlayer extends Vue {
 		@Prop()
 		public videoUrl: string | null = null
+		@Prop()
+		public mimeType: string | null = null
+
+		public get videoExtension(): string {
+			return this.mimeType !== null && this.mimeType.indexOf("/") !== -1 ? this.mimeType.substr(this.mimeType.indexOf("/") + 1) : "video"
+		}
 	}
 </script>
 

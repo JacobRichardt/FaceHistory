@@ -2,7 +2,7 @@
 	.home
 		ImageImport(@imagesReady="imagesReady")
 		VideoConverter(:images="images" @videoReady="videoReady")
-		VideoPlayer(:videoUrl="videoUrl")
+		VideoPlayer(:videoUrl="videoUrl", :mimeType="mimeType")
 </template>
 
 <script lang="ts">
@@ -15,6 +15,7 @@
 	export default class Home extends Vue {
 		public images: ImageBitmap[] | null = null
 		public videoUrl: string | null = null
+		public mimeType: string | null = null
 
 		public imagesReady(images: ImageBitmap[]): void {
 			this.images = images
@@ -25,6 +26,7 @@
 				URL.revokeObjectURL(this.videoUrl)
 
 			this.videoUrl = URL.createObjectURL(video)
+			this.mimeType = video.type
 		}
 	}
 </script>

@@ -18,6 +18,8 @@
 		private width = 1280
 		private height = 720
 		private frameRate = 7
+		private videoBitRate = 50000000
+		private mimeTypes = ["video/mp4", "video/webm"]
 
 		public get canConvert(): boolean {
 			return this.images !== null && !this.isWorking
@@ -29,14 +31,22 @@
 
 			this.isWorking = true
 
-			this.convertToVideo(this.images)
+			this.convertToVideo(this.images, this.getSupportedMimeType(this.mimeTypes))
 				.then(blob => {
 					this.$emit("videoReady", blob)
 					this.isWorking = false
 				})
 		}
 
-		private convertToVideo(images: ImageBitmap[]): Promise<Blob> {
+		private getSupportedMimeType(mimeTypes: string[]): string {
+			for (const type of mimeTypes)
+				if (MediaRecorder.isTypeSupported(type))
+					return type
+
+			throw new Error("No supported mime types found")
+		}
+
+		private convertToVideo(images: ImageBitmap[], mimeType: string): Promise<Blob> {
 			const canvas = document.createElement("Canvas") as HTMLCanvasElement
 
 			canvas.setAttribute("width", this.width.toString(10))
@@ -48,7 +58,7 @@
 			const context = canvas.getContext("2d")!
 
 			const stream = (canvas as any).captureStream(0)
-			const recorder = new MediaRecorder(stream, {mimeType: "video/webm", videoBitsPerSecond: 50000000})
+			const recorder = new MediaRecorder(stream, {mimeType, videoBitsPerSecond: this.videoBitRate})
 			const chunks: BlobPart[] = []
 			let imageIndex = 0
 
@@ -70,7 +80,7 @@
 			return new Promise<Blob>(resolve => {
 				recorder.onstop = () => {
 					document.body.removeChild(canvas)
-					resolve(new Blob(chunks, {type: "video/*"}))
+					resolve(new Blob(chunks, {type: mimeType}))
 				}
 
 				recorder.start()
