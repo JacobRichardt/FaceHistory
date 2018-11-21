@@ -1,7 +1,7 @@
 <template lang="pug">
 	v-card.videoPlayer
 		v-container
-			v-btn(v-if="videoUrl" :href="videoUrl" download="faceHistoryVideo.webm") Download video
+			v-btn(v-if="videoUrl" :href="videoUrl" download="faceHistoryVideo.webm" block) Download video
 			video(v-if="videoUrl" :src="videoUrl" controls)
 </template>
 

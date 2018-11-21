@@ -57,14 +57,14 @@
 			}
 
 			const animate = () => {
+				if (imageIndex === images.length)
+					recorder.stop()
+
 				context.clearRect(0, 0, this.width, this.height)
 				context.drawImage(images[imageIndex++], 0, 0, this.width, this.height)
 				stream.requestFrame()
 
-				if (imageIndex < images.length)
-					setTimeout(animate, 1000 / this.frameRate)
-				else
-					recorder.stop()
+				setTimeout(animate, 1000 / this.frameRate)
 			}
 
 			return new Promise<Blob>(resolve => {
