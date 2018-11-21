@@ -2,7 +2,6 @@
 	v-card.videoConverter
 		v-container
 			v-btn(v-show="canConvert" @click="convert") Convert to video
-			video(v-if="videoUrl" :src="videoUrl" controls)
 </template>
 
 <script lang="ts">
@@ -14,8 +13,7 @@
 	export default class VideoConverter extends Vue {
 		@Prop()
 		public images!: ImageBitmap[] | null
-		public videoUrl: string | null = null
-		public isWorking = false
+		private isWorking = false
 
 		public get canConvert(): boolean {
 			return this.images !== null && !this.isWorking
@@ -29,10 +27,7 @@
 
 			this.convertToVideo(this.images)
 				.then(blob => {
-					if (this.videoUrl !== null)
-						URL.revokeObjectURL(this.videoUrl)
-
-					this.videoUrl = URL.createObjectURL(blob)
+					this.$emit("videoReady", blob)
 					this.isWorking = false
 				})
 		}
