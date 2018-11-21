@@ -15,14 +15,17 @@
 		@Prop()
 		public images!: ImageBitmap[] | null
 		public videoUrl: string | null = null
+		public isWorking = false
 
 		public get canConvert(): boolean {
-			return this.images !== null
+			return this.images !== null && !this.isWorking
 		}
 
 		public convert(): void {
 			if (this.images === null)
 				return
+
+			this.isWorking = true
 
 			this.convertToVideo(this.images)
 				.then(blob => {
@@ -30,6 +33,7 @@
 						URL.revokeObjectURL(this.videoUrl)
 
 					this.videoUrl = URL.createObjectURL(blob)
+					this.isWorking = false
 				})
 		}
 

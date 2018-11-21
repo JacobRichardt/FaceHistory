@@ -4,7 +4,7 @@
 			label Select the images
 				input(type="file" multiple accept="image/*" @change="imagesSelected")
 			v-divider
-			div Selected files: {{selectedNumberOfFiles}}
+			div Converted files: {{convertedNumberOfFiles}} of {{selectedNumberOfFiles}}
 </template>
 
 <script lang="ts">
@@ -13,6 +13,7 @@
 	@Component({components: {}})
 	export default class ImageImport extends Vue {
 		public selectedNumberOfFiles = 0
+		public convertedNumberOfFiles = 0
 
 		public imagesSelected(event: Event): void {
 			const files = this.getFilesFromInput(event.target as HTMLInputElement)
@@ -27,7 +28,11 @@
 		}
 
 		private createImageBitmaps(files: File[]): Promise<ImageBitmap[]> {
-			return Promise.all(files.map(f => createImageBitmap(f)))
+			this.convertedNumberOfFiles = 0
+			return Promise.all(files.map(f => createImageBitmap(f).then(i => {
+				this.convertedNumberOfFiles++
+				return i
+			})))
 		}
 
 		private getFilesFromInput(input: HTMLInputElement): File[] {
