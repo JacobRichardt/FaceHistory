@@ -10,14 +10,15 @@
 	import ImageImport from "@/components/ImageImport.vue"
 	import VideoConverter from "@/components/VideoConverter.vue"
 	import VideoPlayer from "@/components/VideoPlayer.vue"
+	import ImageInfo from "@/components/ImageInfo"
 
 	@Component({components: {ImageImport, VideoConverter, VideoPlayer}})
 	export default class Home extends Vue {
-		public images: ImageBitmap[] | null = null
+		public images: ImageInfo[] | null = null
 		public videoUrl: string | null = null
 		public mimeType: string | null = null
 
-		public imagesReady(images: ImageBitmap[]): void {
+		public imagesReady(images: ImageInfo[]): void {
 			this.images = images
 		}
 

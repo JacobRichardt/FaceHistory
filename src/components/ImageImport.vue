@@ -5,34 +5,55 @@
 				input(type="file" multiple accept="image/*" @change="imagesSelected")
 			v-divider
 			div Converted files: {{convertedNumberOfFiles}} of {{selectedNumberOfFiles}}
+			FaceImage(v-for="image in images" :image="image")
 </template>
 
 <script lang="ts">
 	import { Component, Vue } from "vue-property-decorator"
+	import ImageInfo from "@/components/ImageInfo"
+	import FaceImage from "@/components/FaceImage.vue"
 
-	@Component({components: {}})
+	@Component({components: {FaceImage}})
 	export default class ImageImport extends Vue {
-		public selectedNumberOfFiles = 0
-		public convertedNumberOfFiles = 0
+		public images: ImageInfo[] = []
+
+		private currentlyLoading = 0
+		private maxConcurrentLoading = 5
+
+		public get selectedNumberOfFiles(): number {
+			return this.images.length
+		}
+
+		public get convertedNumberOfFiles(): number {
+			return this.images.filter(i => i.isLoaded).length
+		}
 
 		public imagesSelected(event: Event): void {
 			const files = this.getFilesFromInput(event.target as HTMLInputElement)
 
-			this.selectedNumberOfFiles = files.length
-
-			if (files.length !== 0)
-				this.createImageBitmaps(files)
-					.then(images => {
-						this.$emit("imagesReady", images)
-					})
+			if (files.length !== 0) {
+				this.images = files.map(f => new ImageInfo(f))
+				this.loadMore()
+			}
 		}
 
-		private createImageBitmaps(files: File[]): Promise<ImageBitmap[]> {
-			this.convertedNumberOfFiles = 0
-			return Promise.all(files.map(f => createImageBitmap(f).then(i => {
-				this.convertedNumberOfFiles++
-				return i
-			})))
+		private loadMore(): void {
+			for (const image of this.images) {
+				if (this.currentlyLoading >= this.maxConcurrentLoading)
+					return
+
+				if (image.isLoaded || image.isLoading)
+					continue
+
+				this.currentlyLoading++
+				image.load().finally(() => {
+					this.currentlyLoading--
+					this.loadMore()
+				})
+			}
+
+			if (this.images.every(i => i.isLoaded))
+				this.$emit("imagesReady", this.images)
 		}
 
 		private getFilesFromInput(input: HTMLInputElement): File[] {
