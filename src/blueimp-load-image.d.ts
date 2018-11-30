@@ -1,21 +1,18 @@
 declare module "blueimp-load-image" {
-	interface loadImageOptions
-	{
-		maxWidth?:number;
-		maxHeight?:number;
-		minWidth?:number;
-		minHeight?:number;
-		orientation?:number|boolean;
-		meta?:boolean;
-		canvas?:boolean;
+	// tslint:disable-next-line
+	interface loadImageOptions {
+		maxWidth?: number
+		maxHeight?: number
+		minWidth?: number
+		minHeight?: number
+		orientation?: number|boolean
+		meta?: boolean
+		canvas?: boolean
 	}
 
-	interface loadImage
-	{
-		(image:File|Blob, callback:(result:HTMLImageElement|HTMLCanvasElement|Error, metadata:any)=>void, options:loadImageOptions):any;
-	}
+	type loadImage = (image: File|Blob, callback: (result: HTMLImageElement|HTMLCanvasElement|Error, metadata: any) => void, options: loadImageOptions) => any
 
-	const loadImage:loadImage;
+	const loadImage: loadImage
 
-	export = loadImage;
+	export = loadImage
 }
