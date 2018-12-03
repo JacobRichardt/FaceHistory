@@ -12,6 +12,7 @@
 	import { Component, Vue } from "vue-property-decorator"
 	import ImageInfo from "@/components/ImageInfo"
 	import FaceImage from "@/components/FaceImage.vue"
+	import * as faceapi from "face-api.js/build/es6/index.js"
 
 	@Component({components: {FaceImage}})
 	export default class ImageImport extends Vue {
@@ -26,6 +27,10 @@
 
 		public get convertedNumberOfFiles(): number {
 			return this.images.filter(i => i.isLoaded).length
+		}
+
+		public mounted(): void {
+			faceapi.loadSsdMobilenetv1Model("/models")
 		}
 
 		public imagesSelected(event: Event): void {
